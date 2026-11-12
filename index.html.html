@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>APEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000; --bg2:#141414; --ink:#fff; --mute:#b3b3b3;
+  --line:#fff; --hot:#777; --moon:#fff; --ok:#d9d9d9;
+  --px:4px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Press Start 2P",ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.9;image-rendering:pixelated}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:var(--px) solid var(--moon);outline-offset:var(--px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:20}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;box-shadow:0 var(--px) 0 0 var(--line)}
+.logo{font-size:18px;color:var(--hot);text-shadow:var(--px) var(--px) 0 #3a3a3a;display:flex;align-items:center;gap:10px}
+.logo i{width:20px;height:16px;display:block;background:
+  linear-gradient(var(--ink),var(--ink)) 8px 0/4px 4px no-repeat,
+  linear-gradient(var(--ink),var(--ink)) 4px 4px/12px 4px no-repeat,
+  linear-gradient(var(--hot),var(--hot)) 0 8px/20px 8px no-repeat}
+nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+nav a{padding:8px 10px;color:var(--mute)}
+nav a:hover{color:var(--ink);background:var(--bg2)}
+
+.hero{position:relative;max-width:1100px;margin:28px auto 0;padding:0 20px}
+.scene{position:relative;box-shadow:0 calc(var(--px)*-1) 0 0 var(--line),0 var(--px) 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line),var(--px) 0 0 0 var(--line)}
+canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated}
+.title{position:absolute;left:0;right:0;top:9%;text-align:center;padding:0 12px}
+h1{margin:0;font-weight:400;font-size:clamp(34px,10vw,96px);line-height:1;letter-spacing:.06em;color:var(--ink);text-shadow:4px 4px 0 var(--hot),8px 8px 0 #3a3a3a}
+.title p{margin:18px 0 0;color:var(--ink);font-size:clamp(9px,1.8vw,13px);text-shadow:2px 2px 0 var(--bg)}
+.go{display:flex;justify-content:center;margin:28px 0 8px}
+.btn{font:inherit;color:var(--bg);background:var(--moon);border:0;padding:16px 22px;cursor:pointer;box-shadow:0 var(--px) 0 0 #8c8c8c,var(--px) 0 0 0 #8c8c8c,0 calc(var(--px)*-1) 0 0 var(--ink),calc(var(--px)*-1) 0 0 0 var(--ink);}
+.btn:hover{background:var(--hot);color:var(--ink)}
+.btn:active{transform:translateY(var(--px))}
+.blink{animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+
+section{max-width:1100px;margin:0 auto;padding:72px 20px 0}
+h2{margin:0 0 14px;font-weight:400;font-size:clamp(16px,3.4vw,26px);color:var(--moon);text-shadow:3px 3px 0 #3a3a3a;line-height:1.4}
+.lead{margin:0 0 32px;color:var(--mute);max-width:60ch}
+.bar{height:16px;background:var(--bg2);box-shadow:inset 0 0 0 var(--px) var(--line);margin:0 0 28px;position:relative}
+.bar b{position:absolute;left:var(--px);top:var(--px);bottom:var(--px);width:0;background:var(--ok)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.slot{font:inherit;color:var(--mute);text-align:left;background:var(--bg2);border:0;padding:22px 18px;min-height:190px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:16px;
+  background-image:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px);background-size:100% 4px;background-repeat:no-repeat;background-position:0 0;
+  box-shadow:0 var(--px) 0 0 var(--line),0 calc(var(--px)*-1) 0 0 var(--line),var(--px) 0 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line)}
+.slot:hover{color:var(--ink);transform:translateY(calc(var(--px)*-1))}
+.slot .q{font-size:44px;line-height:1;color:var(--hot);text-shadow:var(--px) var(--px) 0 #3a3a3a}
+.slot span{display:block}
+.slot .st{color:var(--mute);font-size:10px}
+.slot:hover .q{animation:bl .6s steps(2) infinite}
+
+.free{margin-top:24px;min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);padding:24px;
+  box-shadow:0 var(--px) 0 0 var(--line),0 calc(var(--px)*-1) 0 0 var(--line),var(--px) 0 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line);
+  background:repeating-linear-gradient(45deg,var(--bg2) 0 8px,var(--bg) 8px 16px)}
+.free p{margin:0;background:var(--bg);padding:12px 16px}
+
+.tiers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.tier{background:var(--bg2);padding:24px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 var(--px) 0 0 var(--line),0 calc(var(--px)*-1) 0 0 var(--line),var(--px) 0 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line)}
+.tier .price{font-size:18px;color:var(--moon);text-shadow:3px 3px 0 #3a3a3a;line-height:1.4}
+.tier h3{margin:0;font-weight:400;font-size:12px;color:var(--ink);line-height:1.7}
+.tier ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;color:var(--mute);font-size:10px;line-height:1.8}
+.tier li b{display:block;color:var(--ink);font-weight:400;margin-bottom:4px}
+.tier .sum{margin:auto 0 0;padding-top:12px;border-top:var(--px) solid var(--line);color:var(--ink);font-size:10px;line-height:1.8}
+.plans-note{margin:28px 0 0;color:var(--mute);font-size:10px;line-height:1.8}
+#tg{padding-bottom:96px}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:28px 24px;background:var(--bg2);box-shadow:0 var(--px) 0 0 var(--hot),0 calc(var(--px)*-1) 0 0 var(--hot),var(--px) 0 0 0 var(--hot),calc(var(--px)*-1) 0 0 0 var(--hot)}
+.tg p{margin:0;max-width:44ch;color:var(--mute)}
+.tg b{display:block;font-weight:400;color:var(--hot);font-size:16px;margin-bottom:10px;text-shadow:3px 3px 0 #3a3a3a}
+.tg .btn:not(:hover){background:var(--ok)}
+footer a:hover{color:var(--ink)}
+footer{margin:96px auto 0;max-width:1100px;padding:24px 20px 40px;color:var(--mute);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:inset 0 var(--px) 0 0 var(--line);font-size:10px}
+
+html[data-theme=light]{color-scheme:light;--bg:#fff;--bg2:#ededed;--ink:#000;--mute:#4d4d4d;--line:#000;--hot:#555;--moon:#000;--ok:#333}
+html[data-theme=light] canvas{filter:invert(1)}
+.tog{font:inherit;font-size:9px;color:var(--mute);background:var(--bg2);border:0;padding:8px 10px;cursor:pointer}
+.tog:hover{color:var(--ink)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:40}
+.modal.on{display:flex}
+.mbox{background:var(--bg);color:var(--ink);max-width:640px;width:100%;max-height:85vh;overflow:auto;padding:28px 24px;position:relative;box-shadow:0 var(--px) 0 0 var(--line),0 calc(var(--px)*-1) 0 0 var(--line),var(--px) 0 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line)}
+.mbox h3{margin:0 0 20px;font-weight:400;font-size:16px;color:var(--moon);line-height:1.5;padding-right:40px}
+.mx{position:absolute;top:12px;right:12px;font:inherit;background:var(--bg2);color:var(--ink);border:0;padding:8px 10px;cursor:pointer}
+.mi{margin:0 0 18px;color:var(--mute);font-size:10px;line-height:1.9}
+.mi b{display:block;color:var(--ink);font-weight:400;margin-bottom:4px;font-size:11px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);transform:translate(-50%,200%);background:var(--ink);color:var(--bg);padding:14px 18px;max-width:90vw;font-size:10px;z-index:30;box-shadow:var(--px) var(--px) 0 0 var(--hot);transition:transform .15s steps(3)}
+.toast.on{transform:translate(-50%,0)}
+
+@media (max-width:560px){body{font-size:11px}header{flex-wrap:wrap;justify-content:center;padding:12px 10px;gap:8px}.logo{width:100%;justify-content:center}nav{width:100%;justify-content:center;gap:4px}nav a,.tog{padding:6px 8px;font-size:9px}.title{top:6%}}
+@media (prefers-reduced-motion:reduce){.blink,.slot:hover .q{animation:none}html{scroll-behavior:auto}.toast{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#top"><i></i>APEX</a>
+  <nav>
+    <a href="#tips">Умный выбор</a>
+    <a href="#plans">Подписки</a>
+    <a href="#tg">Telegram</a>
+    <button class='tog' id='snd' type='button'>Звук: вкл</button>
+    <button class='tog' id='theme' type='button'>Тема: тёмная</button>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="scene">
+      <canvas id="sky" aria-label="Пиксельная гора с флагом на вершине под ночным небом" role="img"></canvas>
+      <div class="title">
+        <h1>APEX</h1>
+        
+      </div>
+    </div>
+    <div class="go"><a class="btn" href="#tips">▶ К советам</a></div>
+  </div>
+
+  <section id="tips">
+    <h2>Умный выбор</h2>
+    <p class="lead">Короткие советы: что выбрать, кому что подойдёт и как не переплатить.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id='plans'>
+    <h2>Подписки по бюджетам</h2>
+    <p class='lead'>От бесплатного варианта до уровня продвинутых. Выбирайте по бюджету и задачам.</p>
+    <div class='tiers'>
+      <article class='tier'>
+        <div class='price'>0 ₽</div>
+        <h3>Бесплатная связка</h3>
+        <ul>
+          <li><b>Antigravity</b>Мелкие правки визуала. Лимиты заканчиваются быстро.</li>
+          <li><b>OpenCode</b>Много бесплатных моделей, например DeepSeek V4.1 Flash и JLM 5.3 Flash. Примерно 10 больших запросов на лимит. Когда лимит закончился, переключитесь на модель попроще: у неё свои лимиты.</li>
+          <li><b>TR + OpenRouter</b>Бесплатный API-ключ с OpenRouter. Лимиты меньше, но можно завести второй аккаунт под второй ключ.</li>
+        </ul>
+        <p class='sum'>Связка из трёх агентов даёт неплохой проект на продажу, даже без денег.</p>
+      </article>
+      <article class='tier'>
+        <div class='price'>500–1 000 ₽</div>
+        <h3>Две подписки</h3>
+        <ul>
+          <li><b>Google AI Pro</b>Около 100 ₽ на сторонних площадках. А также разыгрывается у нас в Telegram-канале. Gemini 4 Argon для больших проектов (с лимитами), Gemini 3.8 Flash и 3.1 Pro для обычного общения, генерация фото.</li>
+          <li><b>OpenCode Go</b>$10. Больше моделей и лимитов, чем в бесплатной версии. DeepSeek V4.1 Flash хватает больше чем на 50 запросов.</li>
+        </ul>
+        <p class='sum'>Заметный отрыв от бесплатного уровня. Если есть бюджет, стоит.</p>
+      </article>
+      <article class='tier'>
+        <div class='price'>около 2 000 ₽</div>
+        <h3>Выберите одну</h3>
+        <ul>
+          <li><b>Claude Pro</b>Самый умный ИИ для кодинга: Fable 5.2 и Opus 5.5. Sonnet и Haiku для обычных задач.</li>
+          <li><b>ChatGPT Plus</b>Универсальный вариант под все задачи: GPT-6 Astra для самых сложных, GPT-6.1 Sol и другие. Чуть слабее в кодинге, зато реже баны и часто бесплатные сбросы лимитов.</li>
+        </ul>
+        <p class='sum'>Это уровень самых передовых моделей. Переплачивать ли по сравнению с прошлым уровнем, зависит от ваших задач.</p>
+      </article>
+      <article class='tier'>
+        <div class='price'>около 4 000 ₽</div>
+        <h3>Одна большая или связка</h3>
+        <ul>
+          <li><b>OpenCode Go Plus</b>Рабочая лошадка с огромными лимитами, суммарно больше 5 000 запросов. Модели Kimi 3.1 Pro, DeepSeek V4.1 Flash, Qwen 3.8 Max.</li>
+          <li><b>Связка Claude Pro + ChatGPT Plus + OpenCode Go</b>Claude для самого умного кодинга, ChatGPT для видео, фото и повседневных задач, OpenCode Go для визуала и мелких правок, чтобы не тратить лимиты Claude.</li>
+        </ul>
+        <p class='sum'>Выше среднего пользователя. Лучший вариант для опытных программистов, которые ведут большие проекты.</p>
+      </article>
+      <article class='tier'>
+        <div class='price'>от 10 000 ₽</div>
+        <h3>Для продвинутых</h3>
+        <ul>
+          <li><b>Claude Max 5 или Max 20</b>Почти безлимитны, хватает десятков тысяч сложных запросов. Выбирайте, если важны кодинг или создание 3D-моделей.</li>
+          <li><b>ChatGPT Pro 500</b>Почти безлимитный вариант с максимумом функций.</li>
+        </ul>
+        <p class='sum'>Для очень больших проектов и самых продвинутых пользователей ИИ.</p>
+      </article>
+    </div>
+    <p class='plans-note'>Цены и лимиты сервисов меняются. Перед покупкой проверьте актуальные условия на сайте сервиса.</p>
+  </section>
+
+  <section id="tg">
+    <div class="tg">
+      <p><b>Канал в Telegram</b>Подпишись, чтобы не пропустить новые советы.</p>
+      <a class="btn" href="https://t.me/Try_Apex" target="_blank" rel="noopener">▶ @Try_Apex</a>
+    </div>
+  </section>
+
+</main>
+
+
+<div class='modal' id='modal' role=dialog aria-modal=true aria-hidden=true>
+  <div class='mbox'>
+    <button class='mx' id='mclose' type='button'>✕</button>
+    <h3 id='mtitle'></h3>
+    <div id='mbody'></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  /* слоты */
+  var grid=document.getElementById('grid'),toast=document.getElementById('toast'),tt;
+  var tips=[['?','Что выбрать','Главное, на что смотреть'],['@','Кому что подойдёт','Подбор под задачу и бюджет'],['$','Как не переплатить','Где и когда выгоднее']];
+  tips.forEach(function(d){
+    var b=document.createElement('button');
+    b.className='slot';b.type='button';
+    b.innerHTML='<span class="q">'+d[0]+'</span><span>'+d[1]+'<br><span class="st">'+d[2]+'</span></span>';
+    b.onclick=function(){
+      toast.textContent='Сюда впишем советы. Скажи, о чём именно.';
+      toast.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('on')},2600);
+    };
+    grid.appendChild(b);
+  });
+
+  /* пиксельное небо */
+  var c=document.getElementById('sky'),x=c.getContext('2d'),W=160,H=90;
+  c.width=W;c.height=H;
+  var bands=['#0a0a0a','#141414','#1e1e1e','#2a2a2a','#383838','#4a4a4a','#606060','#7a7a7a'];
+  var stars=[];for(var i=0;i<46;i++)stars.push([Math.random()*W|0,Math.random()*46|0,Math.random()*6]);
+  var clouds=[[10,24,1],[70,14,.6],[120,34,.8]];
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function R(col,a,b,w,h){x.fillStyle=col;x.fillRect(a|0,b|0,w,h)}
+  function ridge(base,amp,seed,col){
+    for(var i=0;i<W;i++){
+      var h=base-Math.abs(Math.sin(i*.07+seed)*amp+Math.sin(i*.17+seed*2)*amp*.4)|0;
+      R(col,i,h,1,H-h);
+    }
+  }
+  function draw(t){
+    for(var i=0;i<bands.length;i++)R(bands[i],0,i*12,W,12);
+    stars.forEach(function(s){if(Math.sin(t/9+s[2])>-.3)R('#fff',s[0],s[1],1,1)});
+    /* луна */
+    for(var dy=-9;dy<=9;dy++)for(var dx=-9;dx<=9;dx++){
+      if(dx*dx+dy*dy<=81)R((dx+3)*(dx+3)+(dy-2)*(dy-2)<70?'#ffffff':'#d4d4d4',124+dx,20+dy,1,1);
+    }
+    R('#a8a8a8',120,17,3,2);R('#a8a8a8',127,23,2,2);R('#a8a8a8',123,26,2,1);
+    /* облака */
+    clouds.forEach(function(k){
+      var cx=((k[0]+t*.05*k[2])%(W+40))-20;
+      R('#5a5a5a',cx,k[1],18,3);R('#5a5a5a',cx+4,k[1]-2,10,2);R('#7a7a7a',cx+2,k[1]-1,6,1);
+    });
+    /* дальний хребет */
+    ridge(66,10,.4,'#3c3c3c');
+    /* главная вершина */
+    for(var i=0;i<W;i++){
+      var top=Math.floor(26+Math.abs(i-80)*.95);
+      if(top>=H)continue;
+      R(i<80?'#1c1c1c':'#0e0e0e',i,top,1,H-top);
+      var sd=7+((i*7)%3);
+      R(i<80?'#bfbfbf':'#ffffff',i,top,1,sd);
+    }
+    /* флаг */
+    R('#ffffff',80,16,1,11);
+    var w=Math.round(Math.sin(t/6));
+    R('#ffffff',81,16,6+w,2);R('#ffffff',81,18,5-w,2);R('#bfbfbf',81,20,4,1);
+    /* ближний хребет и ёлки */
+    ridge(84,5,1.3,'#050505');
+    for(var p=6;p<W;p+=13){
+      var yy=84-Math.abs(Math.sin(p*.07+1.3)*5+Math.sin(p*.17+2.6)*2)|0;
+      R('#050505',p,yy-9,1,3);R('#050505',p-1,yy-6,3,2);R('#050505',p-2,yy-4,5,2);R('#050505',p-3,yy-2,7,2);
+    }
+  }
+  var t=0,last=0;
+  function loop(ts){
+    if(ts-last>90){last=ts;t++;draw(t)}
+    requestAnimationFrame(loop);
+  }
+  draw(0);
+  if(!reduce)requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+  var AC=null,sndOn=true,last=null;
+  function ctx(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
+  function beep(f,d,vol,type){
+    if(!sndOn)return;var a=ctx();if(!a)return;if(a.state==='suspended')a.resume();
+    var o=a.createOscillator(),g=a.createGain(),t=a.currentTime,v=vol||.05;
+    o.type=type||'square';o.frequency.value=f;
+    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d);
+  }
+  var S={
+    click:function(){beep(880,.06)},
+    tick:function(){beep(1400,.015,.02)},
+    open:function(){beep(523,.08);setTimeout(function(){beep(784,.12)},70)},
+    close:function(){beep(392,.08)},
+    toggle:function(){beep(660,.05);setTimeout(function(){beep(990,.07)},50)}
+  };
+  document.addEventListener('mouseover',function(e){
+    var el=e.target.closest&&e.target.closest('nav a,.slot,.btn,.tog,.tg a');
+    if(el&&el!==last){last=el;S.tick()}
+    if(!el)last=null;
+  });
+  document.addEventListener('click',function(e){
+    if(e.target.closest&&e.target.closest('nav a,.slot,.btn,.mx,.tg a'))S.click();
+  });
+
+  var root=document.documentElement,tb=document.getElementById('theme'),sb=document.getElementById('snd');
+  tb.onclick=function(){
+    var light=root.getAttribute('data-theme')==='light';
+    root.setAttribute('data-theme',light?'dark':'light');
+    tb.textContent=light?'Тема: тёмная':'Тема: светлая';
+    S.toggle();
+  };
+  sb.onclick=function(){sndOn=!sndOn;sb.textContent=sndOn?'Звук: вкл':'Звук: выкл';if(sndOn)S.toggle()};
+
+  var DATA={
+    'Что выбрать':[
+      ['Программист или 3D-моделлер','Берите Claude Pro. Fable 5.2 и Opus 5.5 для сложного кода, Sonnet для рутины.'],
+      ['Обычный пользователь','Open Code Go за $10 или Google AI Pro за около 100 ₽ на сторонних площадках. Для простых задач подойдут DeepSeek V4.1 Flash и Gemini 3.1 Pro.'],
+      ['Учёба и рефераты','Google AI Pro. Gemini 3.1 Pro хорошо объясняет темы и помогает разобраться в материале.'],
+      ['Контент-мейкер: посты, фото, видео','ChatGPT Plus. GPT-6.1 Sol для текстов, плюс генерация фото и видео.'],
+      ['Дизайнер или верстальщик, мелкие правки','Open Code Go. DeepSeek V4.1 Flash для визуала. Когда лимит кончится, переключитесь на модель попроще.'],
+      ['Большие проекты, много кода','Open Code Go Plus или Claude Max. Kimi 3.1 Pro и Qwen 3.8 Max на больших объёмах, Claude Max для самых сложных задач.'],
+      ['Совсем без денег','Бесплатная связка: Antigravity для правок, OpenCode для запросов, TR с ключом OpenRouter как запас.']
+    ],
+    'Как не переплатить':[
+      ['Начните с бесплатного','Попробуйте бесплатную связку и поймите, чего именно не хватает.'],
+      ['Одной подписки обычно хватает','Не берите две платные подписки сразу, если одна закрывает задачи.'],
+      ['Покупайте на сторонних площадках','Многие подписки там заметно дешевле, чем на официальном сайте. Берите у продавцов с хорошими отзывами.'],
+      ['Следите за розыгрышами','В нашем Telegram-канале часто разыгрываются разные ИИ-модели и подписки на них.'],
+      ['Мощная модель для основного проекта','Для главной работы над проектом берите самую мощную модель.'],
+      ['Попроще для разговоров','Для обсуждения проекта и простых задач, не связанных с кодом, используйте модель попроще. Так лимиты дольше не кончатся.'],
+      ['Проверяйте цены','Цены и лимиты меняются. Сверяйтесь с сайтом сервиса перед покупкой.']
+    ],
+    'Бесплатный старт':[
+      ['Antigravity','Для мелких правок визуала. Лимиты заканчиваются быстро.'],
+      ['OpenCode','Много бесплатных моделей, около 10 больших запросов на лимит. Потом переключитесь на модель попроще.'],
+      ['TR + OpenRouter','Бесплатный ключ с OpenRouter. Можно завести второй аккаунт под второй ключ.']
+    ]
+  };
+
+  var m=document.getElementById('modal'),mt=document.getElementById('mtitle'),mb=document.getElementById('mbody');
+  function openM(k){
+    mt.textContent=k;mb.innerHTML='';
+    DATA[k].forEach(function(r){
+      var p=document.createElement('div');p.className='mi';
+      var b=document.createElement('b');b.textContent=r[0];
+      p.appendChild(b);p.appendChild(document.createTextNode(r[1]));mb.appendChild(p);
+    });
+    m.classList.add('on');m.setAttribute('aria-hidden','false');S.open();
+  }
+  function closeM(){
+    if(!m.classList.contains('on'))return;
+    m.classList.remove('on');m.setAttribute('aria-hidden','true');S.close();
+  }
+  document.getElementById('mclose').onclick=closeM;
+  m.addEventListener('click',function(e){if(e.target===m)closeM()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeM()});
+
+  var titles=['Что выбрать','Как не переплатить','Бесплатный старт'];
+  var subs=['Кому какая подписка','Где и когда выгоднее','С чего начать'];
+  var qs=['?','$','@'];
+  document.querySelectorAll('#tips .slot').forEach(function(b,i){
+    b.innerHTML='<span class=q>'+qs[i]+'</span><span>'+titles[i]+'<br><span class=st>'+subs[i]+'</span></span>';
+    b.onclick=function(){openM(titles[i])};
+  });
+})();
+</script>
+</body>
+</html>
