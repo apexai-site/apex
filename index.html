@@ -283,6 +283,7 @@ html[data-theme=light] canvas{filter:invert(1)}
 <script>
 (function(){
   var AC=null,sndOn=true,last=null;
+  document.addEventListener('pointerdown',function(){var a=ctx();if(a&&a.state!=='running')a.resume()},true);
   function ctx(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
   function beep(f,d,vol,type){
     if(!sndOn)return;var a=ctx();if(!a)return;if(a.state==='suspended')a.resume();
