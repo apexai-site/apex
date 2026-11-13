@@ -79,6 +79,10 @@ h2{margin:0 0 14px;font-weight:400;font-size:clamp(16px,3.4vw,26px);color:var(--
 .tier .sum{margin:auto 0 0;padding-top:12px;border-top:var(--px) solid var(--line);color:var(--ink);font-size:10px;line-height:1.8}
 .plans-note{margin:28px 0 0;color:var(--mute);font-size:10px;line-height:1.8}
 #tg{padding-bottom:96px}
+.qbox{max-width:640px}
+.qh{font-weight:400;font-size:12px;color:var(--moon);margin:0 0 16px;line-height:1.7}
+.qopt{display:block;width:100%;text-align:left;font:inherit;font-size:10px;line-height:1.7;color:var(--ink);background:var(--bg2);border:0;padding:14px 16px;margin:0 0 10px;cursor:pointer;box-shadow:0 var(--px) 0 0 var(--line),0 calc(var(--px)*-1) 0 0 var(--line),var(--px) 0 0 0 var(--line),calc(var(--px)*-1) 0 0 0 var(--line)}
+.qopt:hover{background:var(--ink);color:var(--bg)}
 .tg{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:28px 24px;background:var(--bg2);box-shadow:0 var(--px) 0 0 var(--hot),0 calc(var(--px)*-1) 0 0 var(--hot),var(--px) 0 0 0 var(--hot),calc(var(--px)*-1) 0 0 0 var(--hot)}
 .tg p{margin:0;max-width:44ch;color:var(--mute)}
 .tg b{display:block;font-weight:400;color:var(--hot);font-size:16px;margin-bottom:10px;text-shadow:3px 3px 0 #3a3a3a}
@@ -108,8 +112,9 @@ html[data-theme=light] canvas{filter:invert(1)}
 <header>
   <a class="logo" href="#top"><i></i>APEX</a>
   <nav>
-    <a href="#tips">Умный выбор</a>
+    <a href="#tips">Советы</a>
     <a href="#plans">Подписки</a>
+    <a href="#quiz">Умный выбор</a>
     <a href="#tg">Telegram</a>
     <button class='tog' id='snd' type='button'>Звук: вкл</button>
     <button class='tog' id='theme' type='button'>Тема: тёмная</button>
@@ -129,7 +134,7 @@ html[data-theme=light] canvas{filter:invert(1)}
   </div>
 
   <section id="tips">
-    <h2>Умный выбор</h2>
+    <h2>Советы</h2>
     <p class="lead">Короткие советы: что выбрать, кому что подойдёт и как не переплатить.</p>
     <div class="grid" id="grid"></div>
   </section>
@@ -144,6 +149,7 @@ html[data-theme=light] canvas{filter:invert(1)}
         <ul>
           <li><b>Antigravity</b>Мелкие правки визуала. Лимиты заканчиваются быстро.</li>
           <li><b>OpenCode</b>Много бесплатных моделей, например DeepSeek V4.1 Flash и JLM 5.3 Flash. Примерно 10 больших запросов на лимит. Когда лимит закончился, переключитесь на модель попроще: у неё свои лимиты.</li>
+          <li><b>ChatGPT Free</b>Бесплатные лимиты: можно общаться, генерировать фото и решать простые задачи. Лимиты ограничены, поэтому для основной работы лучше использовать связку агентов.</li>
           <li><b>TR + OpenRouter</b>Бесплатный API-ключ с OpenRouter. Лимиты меньше, но можно завести второй аккаунт под второй ключ.</li>
         </ul>
         <p class='sum'>Связка из трёх агентов даёт неплохой проект на продажу, даже без денег.</p>
@@ -186,6 +192,12 @@ html[data-theme=light] canvas{filter:invert(1)}
       </article>
     </div>
     <p class='plans-note'>Цены и лимиты сервисов меняются. Перед покупкой проверьте актуальные условия на сайте сервиса.</p>
+  </section>
+
+  <section id='quiz'>
+    <h2>Умный выбор</h2>
+    <p class='lead'>Ответьте на три вопроса, и мы подскажем вариант.</p>
+    <div id='qbox' class='qbox'></div>
   </section>
 
   <section id="tg">
@@ -305,7 +317,7 @@ html[data-theme=light] canvas{filter:invert(1)}
     if(!el)last=null;
   });
   document.addEventListener('click',function(e){
-    if(e.target.closest&&e.target.closest('nav a,.slot,.btn,.mx,.tg a'))S.click();
+    if(e.target.closest&&e.target.closest('nav a,.slot,.btn,.mx,.tg a,.qopt'))S.click();
   });
 
   var root=document.documentElement,tb=document.getElementById('theme'),sb=document.getElementById('snd');
@@ -325,7 +337,7 @@ html[data-theme=light] canvas{filter:invert(1)}
       ['Контент-мейкер: посты, фото, видео','ChatGPT Plus. GPT-6.1 Sol для текстов, плюс генерация фото и видео.'],
       ['Дизайнер или верстальщик, мелкие правки','Open Code Go. DeepSeek V4.1 Flash для визуала. Когда лимит кончится, переключитесь на модель попроще.'],
       ['Большие проекты, много кода','Open Code Go Plus или Claude Max. Kimi 3.1 Pro и Qwen 3.8 Max на больших объёмах, Claude Max для самых сложных задач.'],
-      ['Совсем без денег','Бесплатная связка: Antigravity для правок, OpenCode для запросов, TR с ключом OpenRouter как запас.']
+      ['Совсем без денег','Бесплатная связка: ChatGPT для общения, фото и простых задач, Antigravity для правок, OpenCode для запросов, TR с ключом OpenRouter как запас.']
     ],
     'Как не переплатить':[
       ['Начните с бесплатного','Попробуйте бесплатную связку и поймите, чего именно не хватает.'],
@@ -339,6 +351,7 @@ html[data-theme=light] canvas{filter:invert(1)}
     'Бесплатный старт':[
       ['Antigravity','Для мелких правок визуала. Лимиты заканчиваются быстро.'],
       ['OpenCode','Много бесплатных моделей, около 10 больших запросов на лимит. Потом переключитесь на модель попроще.'],
+      ['ChatGPT (бесплатно)','Можно общаться, генерировать фото и решать простые задачи в пределах бесплатных лимитов. Лимиты меняются, проверяйте на сайте ChatGPT.'],
       ['TR + OpenRouter','Бесплатный ключ с OpenRouter. Можно завести второй аккаунт под второй ключ.']
     ]
   };
@@ -368,6 +381,63 @@ html[data-theme=light] canvas{filter:invert(1)}
     b.innerHTML='<span class=q>'+qs[i]+'</span><span>'+titles[i]+'<br><span class=st>'+subs[i]+'</span></span>';
     b.onclick=function(){openM(titles[i])};
   });
+})();
+</script>
+<script>
+(function(){
+  var QS=[
+    {q:'Чем вы в основном занимаетесь?',o:[['code','Программирую или делаю 3D-модели'],['study','Учёба, тексты, общение'],['content','Посты, фото, видео']]},
+    {q:'Какой бюджет в месяц?',o:[['0','0 ₽'],['1000','До 1 000 ₽'],['2000','Около 2 000 ₽'],['4000','Около 4 000 ₽'],['10000','От 10 000 ₽']]},
+    {q:'Какой объём задач?',o:[['small','Мелкие правки'],['big','Большие проекты']]}
+  ];
+  var ANS=[];
+  var DET={
+    'Бесплатная связка':[['Стоимость','0 ₽.'],['Из чего состоит','ChatGPT в бесплатных лимитах: общение, фото и простые задачи. Antigravity для мелких правок визуала, но лимиты заканчиваются быстро. OpenCode с бесплатными моделями, около 10 больших запросов на лимит, потом переключение на модель попроще. TR с бесплатным ключом OpenRouter: лимиты меньше, но можно завести второй аккаунт под второй ключ.'],['Для кого','Для тех, у кого нет бюджета, и для тех, кто хочет попробовать ИИ перед покупкой.']],
+    'Google AI Pro и OpenCode Go':[['Стоимость','Google AI Pro около 100 ₽ на сторонних площадках, OpenCode Go $10.'],['Google AI Pro','Gemini 4 Argon для больших проектов (с лимитами), Gemini 3.8 Flash и Gemini 3.1 Pro для обычного общения, генерация фото. Иногда разыгрывается в нашем Telegram-канале, там же разыгрываются и другие подписки.'],['OpenCode Go','Больше моделей и лимитов, чем в бесплатной версии. DeepSeek V4.1 Flash хватает больше чем на 50 запросов. Подходит для правок визуала и мелких задач.'],['Для кого','Для обычного пользователя, которому нужны общение, простые задачи и небольшие правки.']],
+    'Claude Pro':[['Стоимость','Около 2 000 ₽.'],['Модели','Fable 5.2 (недавно вышедшая) и Opus 5.5 для кодинга. Sonnet и Haiku для обычных задач.'],['Сильные стороны','Самый умный ИИ для кодинга и сложных задач, в том числе для 3D-моделирования.'],['Ограничения','Лимиты есть, поэтому мелкие правки лучше делать в OpenCode Go, чтобы не тратить лимиты Claude.'],['Для кого','Программисты, 3D-моделлеры и все, кому важен качественный кодинг.']],
+    'ChatGPT Plus':[['Стоимость','Около 2 000 ₽.'],['Модели','GPT-6 Astra для самых трудных задач, GPT-6.1 Sol и другие.'],['Сильные стороны','Универсальный инструмент под все задачи: тексты, генерация фото и видео. Реже баны, часто бесплатные сбросы лимитов.'],['Ограничения','В кодинге чуть слабее Claude.'],['Для кого','Контент-мейкеры и все, кому нужны разные задачи в одном сервисе.']],
+    'ChatGPT Plus или Google AI Pro':[['Стоимость','ChatGPT Plus около 2 000 ₽, Google AI Pro около 100 ₽ на сторонних площадках.'],['ChatGPT Plus','Универсальный инструмент, сильнее в разных задачах. Модели GPT-6 Astra и GPT-6.1 Sol.'],['Google AI Pro','Gemini 3.8 Flash и Gemini 3.1 Pro для общения и учёбы, генерация фото, иногда розыгрыши в Telegram-канале.'],['Для кого','Для учёбы, текстов и общения: подойдёт любой вариант, выбор зависит от бюджета.']],
+    'OpenCode Go Plus':[['Стоимость','Около 4 000 ₽.'],['Лимиты','Огромные: если сложить все модели, больше 5 000 запросов.'],['Модели','Kimi 3.1 Pro, DeepSeek V4.1 Flash, Qwen 3.8 Max.'],['Для кого','Для опытных программистов, которые ведут большие проекты. Многим пользователям этот уровень не нужен.']],
+    'Claude Pro, ChatGPT Plus и OpenCode Go':[['Стоимость','Около 4 000 ₽ в сумме.'],['Как распределить задачи','Claude для самого умного кодинга. ChatGPT для видео, фото и повседневных задач. OpenCode Go для визуала и мелких правок, чтобы не тратить лимиты Claude.'],['Для кого','Для опытных программистов и тех, кто использует ИИ каждый день в нескольких задачах.']],
+    'Claude Max':[['Стоимость','От 10 000 ₽, варианты Max 5 и Max 20.'],['Лимиты','Почти безлимит, десятки тысяч сложных запросов.'],['Для кого','Очень большие проекты, кодинг или создание 3D-моделей. Для самых продвинутых пользователей.']],
+    'ChatGPT Pro':[['Стоимость','От 10 000 ₽, вариант Pro 500.'],['Лимиты','Почти безлимит.'],['Для кого','Для тех, кому нужен максимум функций и очень большие объёмы работы.']]
+  };
+  function pick(b,c,s){
+    if(b==='0')return ['Бесплатная связка','ChatGPT в бесплатных лимитах для общения и фото, Antigravity для мелких правок, OpenCode для больших запросов и TR с OpenRouter как запас.'];
+    if(b==='1000')return ['Google AI Pro и OpenCode Go','Google AI Pro для общения и фото, OpenCode Go для правок и большего числа моделей.'];
+    if(b==='2000'){
+      if(c==='code')return ['Claude Pro','Самый сильный вариант для кодинга и сложных задач: Fable 5.2 и Opus 5.5.'];
+      if(c==='content')return ['ChatGPT Plus','Универсальный вариант: тексты, фото и видео, и реже баны.'];
+      return ['ChatGPT Plus или Google AI Pro','Для учёбы и общения хватит любого. ChatGPT сильнее в универсальных задачах.'];
+    }
+    if(b==='4000')return s==='big'?['OpenCode Go Plus','Огромные лимиты и много моделей для больших проектов.']:['Claude Pro, ChatGPT Plus и OpenCode Go','Связка на все задачи, если бюджет позволяет.'];
+    return c==='code'?['Claude Max','Почти безлимит для самых сложных задач и кодинга.']:['ChatGPT Pro','Почти безлимит и максимум функций.'];
+  }
+  function render(i){
+    var box=document.getElementById('qbox');box.innerHTML='';
+    if(i<QS.length){
+      var h=document.createElement('h3');h.className='qh';h.textContent=(i+1)+' из '+QS.length+'. '+QS[i].q;box.appendChild(h);
+      QS[i].o.forEach(function(o){
+        var b=document.createElement('button');b.type='button';b.className='qopt';b.textContent=o[1];
+        b.onclick=function(){ANS[i]=o[0];render(i+1)};
+        box.appendChild(b);
+      });
+    }else{
+      var r=pick(ANS[1],ANS[0],ANS[2]);
+      var h2=document.createElement('h3');h2.className='qh';h2.textContent='Вам подойдёт: '+r[0];box.appendChild(h2);
+      var p=document.createElement('p');p.className='mi';p.textContent=r[1];box.appendChild(p);
+      var more=document.createElement('button');more.type='button';more.className='qopt';more.textContent='Подробнее об этой подписке';
+      var det=document.createElement('div');det.style.display='none';
+      (DET[r[0]]||[]).forEach(function(d){var dp=document.createElement('p');dp.className='mi';var db=document.createElement('b');db.textContent=d[0];dp.appendChild(db);dp.appendChild(document.createTextNode(d[1]));det.appendChild(dp)});
+      var dn=document.createElement('p');dn.className='mi';dn.textContent='Цены и лимиты меняются, проверьте актуальные условия на сайте сервиса.';det.appendChild(dn);
+      more.onclick=function(){var show=det.style.display==='none';det.style.display=show?'block':'none';more.textContent=show?'Скрыть подробности':'Подробнее об этой подписке'};
+      box.appendChild(more);box.appendChild(det);
+      var again=document.createElement('button');again.type='button';again.className='qopt';again.textContent='Пройти заново';
+      again.onclick=function(){ANS=[];render(0)};
+      box.appendChild(again);
+    }
+  }
+  render(0);
 })();
 </script>
 </body>
